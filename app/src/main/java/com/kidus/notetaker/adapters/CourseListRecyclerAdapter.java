@@ -10,51 +10,48 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kidus.notetaker.R;
+import com.kidus.notetaker.database.CourseInfo;
 import com.kidus.notetaker.database.NoteInfo;
 
 import java.util.List;
 
-public class NoteListRecyclerAdapter extends RecyclerView.Adapter<NoteListRecyclerAdapter.ViewHolder> {
+public class CourseListRecyclerAdapter extends RecyclerView.Adapter<CourseListRecyclerAdapter.ViewHolder> {
 
     private final Context mContext;
+    private final List<CourseInfo> mCourses;
     private final LayoutInflater mLayoutInflater;
-    private final List<NoteInfo> mNotes;
 
-    public NoteListRecyclerAdapter(Context context, List<NoteInfo> notes) {
+    public CourseListRecyclerAdapter(Context context, List<CourseInfo> courses) {
         mContext = context;
-        mNotes = notes;
+        mCourses = courses;
         mLayoutInflater = LayoutInflater.from(mContext);
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = mLayoutInflater.inflate(R.layout.list_item_note_list, parent, false);
+        View itemView = mLayoutInflater.inflate(R.layout.list_item_course_list, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NoteInfo note = mNotes.get(position);
-        holder.mTextCourse.setText(note.getCourse().getTitle());
-        holder.mTextTitle.setText(note.getTitle());
+        CourseInfo course = mCourses.get(position);
+        holder.mTitleCourse.setText(course.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return mNotes.size();
+        return mCourses.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public final TextView mTextCourse;
-        public final TextView mTextTitle;
+        private final TextView mTitleCourse;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mTextCourse = itemView.findViewById(R.id.tv_course_note_list);
-            mTextTitle = itemView.findViewById(R.id.tv_title_note_list);
+            mTitleCourse = itemView.findViewById(R.id.tv_course_course_list);
         }
     }
 }

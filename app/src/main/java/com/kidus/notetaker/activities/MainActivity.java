@@ -1,4 +1,4 @@
-package com.kidus.notetaker;
+package com.kidus.notetaker.activities;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -18,6 +18,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.kidus.notetaker.R;
+import com.kidus.notetaker.adapters.NoteListRecyclerAdapter;
+import com.kidus.notetaker.database.DataManager;
+import com.kidus.notetaker.database.NoteInfo;
+import com.kidus.notetaker.database.NoteTakerSQLOpenHelper;
 import com.kidus.notetaker.ui.gallery.GalleryFragment;
 import com.kidus.notetaker.ui.home.HomeFragment;
 
@@ -25,14 +30,21 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     HomeFragment mHomeFragment = new HomeFragment();
     GalleryFragment mGalleryFragment = new GalleryFragment();
+    public static NoteTakerSQLOpenHelper mSQLOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mSQLOpenHelper = new NoteTakerSQLOpenHelper(this);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,5 +110,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         transaction.commit();
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mSQLOpenHelper.close();
+        super.onDestroy();
     }
 }
