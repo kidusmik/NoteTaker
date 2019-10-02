@@ -1,5 +1,6 @@
 package com.kidus.notetaker.ui.gallery;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kidus.notetaker.R;
+import com.kidus.notetaker.activities.MainActivity;
 import com.kidus.notetaker.adapters.CourseListRecyclerAdapter;
 import com.kidus.notetaker.adapters.NoteListRecyclerAdapter;
-import com.kidus.notetaker.database.CourseInfo;
-import com.kidus.notetaker.database.DataManager;
-import com.kidus.notetaker.database.NoteInfo;
+import com.kidus.notetaker.database.NoteTakerDatabaseContract;
+import com.kidus.notetaker.database.NoteTakerDatabaseContract.CourseInfoEntry;
 
 import java.util.List;
 
@@ -44,8 +45,10 @@ public class GalleryFragment extends Fragment {
         final GridLayoutManager coursesLayoutManager = new GridLayoutManager(root.getContext(), 2);
         recyclerCourses.setLayoutManager(coursesLayoutManager);
 
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        final CourseListRecyclerAdapter courseListRecyclerAdapter = new CourseListRecyclerAdapter(root.getContext(), courses);
+        String[] courseColumns = {CourseInfoEntry.COLUMN_COURSE_TITLE, CourseInfoEntry.COLUMN_COURSE_ID};
+        Cursor courseCursor = MainActivity.mDatabase.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
+
+        final CourseListRecyclerAdapter courseListRecyclerAdapter = new CourseListRecyclerAdapter(root.getContext(), courseCursor);
         recyclerCourses.setAdapter(courseListRecyclerAdapter);
 
         return root;

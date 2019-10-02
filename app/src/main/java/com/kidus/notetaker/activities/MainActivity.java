@@ -1,6 +1,10 @@
 package com.kidus.notetaker.activities;
 
 import android.app.Fragment;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,9 +24,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.kidus.notetaker.R;
 import com.kidus.notetaker.adapters.NoteListRecyclerAdapter;
-import com.kidus.notetaker.database.DataManager;
-import com.kidus.notetaker.database.NoteInfo;
 import com.kidus.notetaker.database.NoteTakerSQLOpenHelper;
+import com.kidus.notetaker.ui.NoteTakerNotification;
 import com.kidus.notetaker.ui.gallery.GalleryFragment;
 import com.kidus.notetaker.ui.home.HomeFragment;
 
@@ -39,12 +42,15 @@ import android.widget.SpinnerAdapter;
 
 import java.util.List;
 
+import static com.kidus.notetaker.ui.NoteTakerNotification.CHANNEL_ID;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     HomeFragment mHomeFragment = new HomeFragment();
     GalleryFragment mGalleryFragment = new GalleryFragment();
     public static NoteTakerSQLOpenHelper mSQLOpenHelper;
+    public static SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        createNotificationChannel();
         mSQLOpenHelper = new NoteTakerSQLOpenHelper(this);
+        mDatabase = mSQLOpenHelper.getReadableDatabase();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,11 +89,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.commit();
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int menuId1 = item.getItemId();
+
+        if(menuId1 == R.id.action_settings)
+            NoteTakerNotification.notify(this, "This is test text", 0);
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

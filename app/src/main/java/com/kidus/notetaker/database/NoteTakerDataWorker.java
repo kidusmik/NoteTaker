@@ -14,53 +14,53 @@ public class NoteTakerDataWorker {
         mDb = db;
     }
 
-    public static void loadFromDatabase(NoteTakerSQLOpenHelper sqlOpenHelper){
-        SQLiteDatabase database = sqlOpenHelper.getReadableDatabase();
+//    public static void loadFromDatabase(NoteTakerSQLOpenHelper sqlOpenHelper){
+//        SQLiteDatabase database = sqlOpenHelper.getReadableDatabase();
+//
+//        String[] courseColumns = {CourseInfoEntry.COLUMN_COURSE_ID, CourseInfoEntry.COLUMN_COURSE_TITLE};
+//        String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE, NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
 
-        String[] courseColumns = {CourseInfoEntry.COLUMN_COURSE_ID, CourseInfoEntry.COLUMN_COURSE_TITLE};
-        String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE, NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+//        Cursor courseCursor = database.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+//        loadCoursesFromDatabase(courseCursor);
+//
+//        Cursor noteCursor = database.query(NoteInfoEntry.TABLE_NAME, noteColumns, null, null, null, null, null);
+//        loadNotesFromDatabase(noteCursor);
+//    }
 
-        Cursor courseCursor = database.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
-        loadCoursesFromDatabase(courseCursor);
-
-        Cursor noteCursor = database.query(NoteInfoEntry.TABLE_NAME, noteColumns, null, null, null, null, null);
-        loadNotesFromDatabase(noteCursor);
-    }
-
-    private static void loadCoursesFromDatabase(Cursor cursor) {
-        int courseIdIndex = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
-        int courseTitleIndex = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
-
-        DataManager dm = DataManager.getInstance();
-        dm.mCourses.clear();
-        while(cursor.moveToNext()){
-            String courseId = cursor.getString(courseIdIndex);
-            String courseTitle = cursor.getString(courseTitleIndex);
-
-            CourseInfo courses = new CourseInfo(courseId, courseTitle, null);
-            dm.mCourses.add(courses);
-        }
-        cursor.close();
-    }
-
-    private static void loadNotesFromDatabase(Cursor cursor) {
-        int courseIdIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
-        int noteTitleIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
-        int noteTextIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
-
-        DataManager dm = DataManager.getInstance();
-        dm.mNotes.clear();
-        while(cursor.moveToNext()){
-            String courseId = cursor.getString(courseIdIndex);
-            String courseTitle = cursor.getString(noteTitleIndex);
-            String courseText = cursor.getString(noteTextIndex);
-
-            NoteInfo notes = new NoteInfo(null, courseTitle, courseText);
-
-            dm.mNotes.add(notes);
-        }
-        cursor.close();
-    }
+//    private static void loadCoursesFromDatabase(Cursor cursor) {
+//        int courseIdIndex = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+//        int courseTitleIndex = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
+//
+//        DataManager dm = DataManager.getInstance();
+//        dm.mCourses.clear();
+//        while(cursor.moveToNext()){
+//            String courseId = cursor.getString(courseIdIndex);
+//            String courseTitle = cursor.getString(courseTitleIndex);
+//
+//            CourseInfo courses = new CourseInfo(courseId, courseTitle, null);
+//            dm.mCourses.add(courses);
+//        }
+//        cursor.close();
+//    }
+//
+//    private static void loadNotesFromDatabase(Cursor cursor) {
+//        int courseIdIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+//        int noteTitleIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+//        int noteTextIndex = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+//
+//        DataManager dm = DataManager.getInstance();
+//        dm.mNotes.clear();
+//        while(cursor.moveToNext()){
+//            String courseId = cursor.getString(courseIdIndex);
+//            String courseTitle = cursor.getString(noteTitleIndex);
+//            String courseText = cursor.getString(noteTextIndex);
+//
+//            NoteInfo notes = new NoteInfo(null, courseTitle, courseText);
+//
+//            dm.mNotes.add(notes);
+//        }
+//        cursor.close();
+//    }
 
 
     public void insertCourses() {
